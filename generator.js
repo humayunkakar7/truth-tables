@@ -58,4 +58,32 @@ function build() {
                 count++;
         return count;
     }
+
+    function solve(equation) {
+        while (equation.indexOf("(") != -1) {
+            let start = equation.lastIndexOf("(");
+            let end = equation.indexOf(")", start);
+            if (start != -1)
+                equation = equation.substring(0, start)
+                    + solve(equation.substring(start + 1, end))
+                    + equation.substring(end + 1);
+        }
+        equation = equation.replace(/''/g, '');
+        equation = equation.replace(/0'/g, '1');
+        equation = equation.replace(/1'/g, '0');
+        for (let i = 0; i < equation.length - 1; i++)
+            if ((equation[i] == '0' || equation[i] == '1') && (equation[i + 1] == '0' || equation[i + 1] == '1'))
+                equation = equation.substring(0, i + 1) + '*' + equation.substring(i + 1, equation.length);
+        try {
+            let safeEval = eval;
+            let answer = safeEval(equation);
+            if (answer == 0)
+                return 0;
+            if (answer > 0)
+                return 1;
+            return '';
+        } catch (e) {
+            return '';
+        }
+    }    
 }
